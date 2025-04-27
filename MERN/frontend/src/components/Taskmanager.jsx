@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 
+
 const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 const statuses = ["To Do", "In Progress", "Done"];
