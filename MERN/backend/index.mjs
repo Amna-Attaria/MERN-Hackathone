@@ -24,6 +24,7 @@ app.use(
 		origin: ['http://localhost:5174',
 			 'http://localhost:5173',
 			'https://mern-hackathone-cnts.vercel.app', 
+			 	'https://mern-hackathone-cnts-dw4mqj4n5-amna-attarias-projects.vercel.app',
 			
 			],
 		methods: ['GET', 'PUT', 'POST', 'DELETE','PATCH'],
