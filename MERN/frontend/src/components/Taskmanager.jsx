@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-
-
 const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 const statuses = ["To Do", "In Progress", "Done"];
@@ -15,6 +13,7 @@ const TaskManager = () => {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState('');
   const [assignedTo, setAssignedTo] = useState('');
+  const [description, setDescription] = useState('');
   const [status, setStatus] = useState('To Do');
   const [editingTask, setEditingTask] = useState(null);
 
@@ -33,7 +32,7 @@ const TaskManager = () => {
   };
 
   const addOrUpdateTask = async () => {
-    const taskData = { title, assignedTo, status };
+    const taskData = { title, assignedTo, description, status };
 
     try {
       if (editingTask) {
@@ -52,6 +51,7 @@ const TaskManager = () => {
   const resetForm = () => {
     setTitle('');
     setAssignedTo('');
+    setDescription('');
     setStatus('To Do');
   };
 
@@ -66,18 +66,34 @@ const TaskManager = () => {
 
   const updateTaskStatus = async (id, newStatus) => {
     try {
-      await axios.patch(`${apiUrl}/tasks/${id}`, { status: newStatus }, {
+      // Find the task by id
+      const taskToUpdate = tasks.find((task) => task._id === id);
+
+      if (!taskToUpdate) {
+        console.error("Task not found");
+        return;
+      }
+
+      // Send all necessary fields
+      await axios.patch(`${apiUrl}/tasks/${id}`, {
+        title: taskToUpdate.title,
+        assignedTo: taskToUpdate.assignedTo,
+        description: taskToUpdate.description,
+        status: newStatus,
+      }, {
         headers: { 'Content-Type': 'application/json' }
       });
+
       fetchTasks(); // Re-fetch tasks after update
     } catch (error) {
       console.error("Error updating status:", error.response ? error.response.data : error.message);
     }
   };
-  
+
   const handleEditClick = (task) => {
     setTitle(task.title);
     setAssignedTo(task.assignedTo);
+    setDescription(task.description || ''); // Handle if no description
     setStatus(task.status);
     setEditingTask(task);
   };
@@ -110,6 +126,13 @@ const TaskManager = () => {
           placeholder="Assigned to"
           className="flex-1 p-3 border-2 border-teal-300 rounded-lg"
         />
+        <input
+          type="text"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Task description"
+          className="flex-1 p-3 border-2 border-teal-300 rounded-lg"
+        />
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
@@ -138,48 +161,50 @@ const TaskManager = () => {
             </h2>
 
             {tasks.filter(task => task.status === boardStatus).map(task => (
-  <div key={task._id} className="p-3 bg-teal-50 rounded-lg flex flex-col gap-2">
-    <span className="text-gray-800">{task.title}</span>
-    <div className="flex gap-2">
-      {boardStatus !== "Done" && (
-        <button
-          onClick={() => updateTaskStatus(task._id, "Done")}  // Pass task._id correctly
-          className="text-white bg-green-500 hover:bg-green-600 rounded px-3 py-1 text-sm"
-        >
-          Done
-        </button>
-      )}
-      {boardStatus !== "In Progress" && (
-        <button
-          onClick={() => updateTaskStatus(task._id, "In Progress")}  // Pass task._id correctly
-          className="text-white bg-yellow-500 hover:bg-yellow-600 rounded px-3 py-1 text-sm"
-        >
-          In Progress
-        </button>
-      )}
-      {boardStatus !== "To Do" && (
-        <button
-          onClick={() => updateTaskStatus(task._id, "To Do")}  // Pass task._id correctly
-          className="text-white bg-blue-500 hover:bg-blue-600 rounded px-3 py-1 text-sm"
-        >
-          To Do
-        </button>
-      )}
-      <button
-        onClick={() => handleEditClick(task)}
-        className="text-teal-600 hover:text-teal-800"
-      >
-        <FontAwesomeIcon icon={faPen} />
-      </button>
-      <button
-        onClick={() => deleteTask(task._id)}
-        className="text-red-500 hover:text-red-700"
-      >
-        <FontAwesomeIcon icon={faTrash} />
-      </button>
-    </div>
-  </div>
-))}
+              <div key={task._id} className="p-3 bg-teal-50 rounded-lg flex flex-col gap-2">
+                <span className="text-gray-800 font-semibold">{task.title}</span>
+                <span className="text-gray-600 text-sm">{task.description}</span>
+                <span className="text-gray-500 text-xs">Assigned to: {task.assignedTo}</span>
+                <div className="flex gap-2">
+                  {boardStatus !== "Done" && (
+                    <button
+                      onClick={() => updateTaskStatus(task._id, "Done")}
+                      className="text-white bg-green-500 hover:bg-green-600 rounded px-3 py-1 text-sm"
+                    >
+                      Done
+                    </button>
+                  )}
+                  {boardStatus !== "In Progress" && (
+                    <button
+                      onClick={() => updateTaskStatus(task._id, "In Progress")}
+                      className="text-white bg-yellow-500 hover:bg-yellow-600 rounded px-3 py-1 text-sm"
+                    >
+                      In Progress
+                    </button>
+                  )}
+                  {boardStatus !== "To Do" && (
+                    <button
+                      onClick={() => updateTaskStatus(task._id, "To Do")}
+                      className="text-white bg-blue-500 hover:bg-blue-600 rounded px-3 py-1 text-sm"
+                    >
+                      To Do
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleEditClick(task)}
+                    className="text-teal-600 hover:text-teal-800"
+                  >
+                    <FontAwesomeIcon icon={faPen} />
+                  </button>
+                  <button
+                    onClick={() => deleteTask(task._id)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              </div>
+            ))}
 
           </div>
         ))}
