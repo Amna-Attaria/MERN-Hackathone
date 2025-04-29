@@ -11,16 +11,19 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
-  'https://mern-hackathone-dwba.vercel.app',
 ];
 
+// Allow all "mern-hackathone-*.vercel.app" domains
 const corsOptions = {
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+    if (
+      allowedOrigins.includes(origin) ||
+      /^https:\/\/mern-hackathone-.*\.vercel\.app$/.test(origin)
+    ) {
       callback(null, true);
     } else {
-      console.log('Blocked by CORS:', origin);
+      console.log('❌ Blocked by CORS:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -28,6 +31,7 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
+
 
 app.use(cors(corsOptions)); // Important: cors middleware first
 app.options('*', cors(corsOptions)); // Handle Pre-flight properly
