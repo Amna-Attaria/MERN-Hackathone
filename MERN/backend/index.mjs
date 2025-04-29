@@ -16,7 +16,7 @@ app.use(
       'https://mern-hackathone-1mkr-29wxofji7-amna-attarias-projects.vercel.app',
      'https://mern-hackathone-3b4jd753m-amna-attarias-projects.vercel.app'
     ],
-    methods: ['GET', 'PUT', 'POST', 'DELETE'],
+    methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
@@ -41,7 +41,7 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-const port = 5000;
+const port = 4000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
