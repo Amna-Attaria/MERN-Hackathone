@@ -12,9 +12,6 @@ app.use(
       'http://localhost:5173',
       'http://localhost:5174',
       'https://mern-hackathone-dwba.vercel.app',
-      'https://mern-hackathone-1mkr.vercel.app',
-      'https://mern-hackathone-1mkr-29wxofji7-amna-attarias-projects.vercel.app',
-     'https://mern-hackathone-3b4jd753m-amna-attarias-projects.vercel.app'
     ],
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH'],
     credentials: true,
