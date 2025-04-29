@@ -6,35 +6,20 @@ import taskRoutes from "./routes/taskRoutes.mjs";
 
 connectToDB();
 const app = express();
-
-// ⭐ CORS Setup
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174',
-];
-
-// Allow all "mern-hackathone-*.vercel.app" domains
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    if (
-      allowedOrigins.includes(origin) ||
-      /^https:\/\/mern-hackathone-.*\.vercel\.app$/.test(origin)
-    ) {
-      callback(null, true);
-    } else {
-      console.log('❌ Blocked by CORS:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-};
-
-
-app.use(cors(corsOptions)); // Important: cors middleware first
-app.options('*', cors(corsOptions)); // Handle Pre-flight properly
+app.use(
+	cors({
+		origin: [ 'http://localhost:5173',
+      'http://localhost:5174',
+      'https://mern-hackathone-dwba.vercel.app',
+      'https://mern-hackathone-1mkr.vercel.app/login',
+      'https://mern-hackathone-1mkr-29wxofji7-amna-attarias-projects.vercel.app'
+			
+			],
+		methods: ['GET', 'PUT', 'POST', 'DELETE'],
+		credentials: true,
+		allowedHeaders: ['Content-Type', 'Authorization'],
+	}),
+);
 
 app.use(express.json());
 
