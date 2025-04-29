@@ -12,7 +12,6 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
   'https://mern-hackathone-dwba.vercel.app',
-  'https://mern-hackathone-1mkr.vercel.app'
 ];
 
 const corsOptions = {
