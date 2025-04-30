@@ -17,7 +17,6 @@ const TaskManager = () => {
   const [status, setStatus] = useState('To Do');
   const [editingTask, setEditingTask] = useState(null);
 
-  // Fetch tasks
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -33,7 +32,6 @@ const TaskManager = () => {
 
   const addOrUpdateTask = async () => {
     const taskData = { title, assignedTo, description, status };
-
     try {
       if (editingTask) {
         await axios.patch(`${apiUrl}/tasks/${editingTask._id}`, taskData);
@@ -66,25 +64,17 @@ const TaskManager = () => {
 
   const updateTaskStatus = async (id, newStatus) => {
     try {
-      // Find the task by id
       const taskToUpdate = tasks.find((task) => task._id === id);
+      if (!taskToUpdate) return;
 
-      if (!taskToUpdate) {
-        console.error("Task not found");
-        return;
-      }
-
-      // Send all necessary fields
       await axios.patch(`${apiUrl}/tasks/${id}`, {
         title: taskToUpdate.title,
         assignedTo: taskToUpdate.assignedTo,
         description: taskToUpdate.description,
         status: newStatus,
-      }, {
-        headers: { 'Content-Type': 'application/json' }
       });
 
-      fetchTasks(); // Re-fetch tasks after update
+      fetchTasks();
     } catch (error) {
       console.error("Error updating status:", error.response ? error.response.data : error.message);
     }
@@ -93,67 +83,65 @@ const TaskManager = () => {
   const handleEditClick = (task) => {
     setTitle(task.title);
     setAssignedTo(task.assignedTo);
-    setDescription(task.description || ''); // Handle if no description
+    setDescription(task.description || '');
     setStatus(task.status);
     setEditingTask(task);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-teal-100 to-teal-300 p-4">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         <h1 className="text-3xl font-bold text-teal-800">Task Manager</h1>
         <button
           onClick={() => navigate("/")}
-          className="bg-teal-700 text-white px-4 py-2 rounded-lg hover:bg-teal-800"
+          className="bg-teal-700 text-white px-4 py-2 rounded-lg hover:bg-teal-800 w-full sm:w-auto"
         >
           Home
         </button>
       </div>
 
       {/* Form */}
-      <div className="flex gap-4 mb-8">
+      <div className="flex flex-col lg:flex-row gap-4 mb-8">
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Task title"
-          className="flex-1 p-3 border-2 border-teal-300 rounded-lg"
+          className="w-full lg:flex-1 p-3 border-2 border-teal-300 rounded-lg"
         />
         <input
           type="text"
           value={assignedTo}
           onChange={(e) => setAssignedTo(e.target.value)}
           placeholder="Assigned to"
-          className="flex-1 p-3 border-2 border-teal-300 rounded-lg"
+          className="w-full lg:flex-1 p-3 border-2 border-teal-300 rounded-lg"
         />
         <input
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Task description"
-          className="flex-1 p-3 border-2 border-teal-300 rounded-lg"
+          className="w-full lg:flex-1 p-3 border-2 border-teal-300 rounded-lg"
         />
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="flex-1 p-3 border-2 border-teal-300 rounded-lg"
+          className="w-full lg:flex-1 p-3 border-2 border-teal-300 rounded-lg"
         >
           {statuses.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
+            <option key={s} value={s}>{s}</option>
           ))}
         </select>
         <button
           onClick={addOrUpdateTask}
-          className="bg-teal-600 hover:bg-teal-700 text-white px-5 py-3 rounded-lg"
+          className="bg-teal-600 hover:bg-teal-700 text-white px-5 py-3 rounded-lg w-full lg:w-auto"
         >
           {editingTask ? "Update" : "Add"}
         </button>
       </div>
 
       {/* Task Board */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {statuses.map((boardStatus) => (
           <div key={boardStatus} className="bg-white rounded-2xl shadow-2xl p-4">
             <h2 className="text-2xl font-semibold text-center text-teal-700 mb-4">
@@ -161,11 +149,11 @@ const TaskManager = () => {
             </h2>
 
             {tasks.filter(task => task.status === boardStatus).map(task => (
-              <div key={task._id} className="p-3 bg-teal-50 rounded-lg flex flex-col gap-2">
+              <div key={task._id} className="p-3 bg-teal-50 rounded-lg flex flex-col gap-2 break-words">
                 <span className="text-gray-800 font-semibold">{task.title}</span>
                 <span className="text-gray-600 text-sm">{task.description}</span>
                 <span className="text-gray-500 text-xs">Assigned to: {task.assignedTo}</span>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   {boardStatus !== "Done" && (
                     <button
                       onClick={() => updateTaskStatus(task._id, "Done")}
