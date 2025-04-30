@@ -12,6 +12,7 @@ app.use(
       'http://localhost:5173',
       'http://localhost:5174',
       'https://mern-hackathone-dwba.vercel.app',
+      'https://mern-hackathone-production.up.railway.app/api'
     ],
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH'],
     credentials: true,
