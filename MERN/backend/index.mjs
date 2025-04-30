@@ -39,7 +39,7 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-const port = 4000;
+const port = 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
