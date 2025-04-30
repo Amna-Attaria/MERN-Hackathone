@@ -12,13 +12,14 @@ app.use(
       'http://localhost:5173',
       'http://localhost:5174',
       'https://mern-hackathone.vercel.app',
-      'https://mern-hackathone-production.up.railway.app/api'
+      'https://mern-hackathone-production-6520.up.railway.app'
     ],
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
+
 
 
 app.use(express.json());
