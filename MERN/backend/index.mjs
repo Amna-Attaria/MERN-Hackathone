@@ -6,22 +6,19 @@ import taskRoutes from "./routes/taskRoutes.mjs";
 
 connectToDB();
 const app = express();
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "https://mern-hackathone.vercel.app",
-  "https://mern-hackathone-production-6520.up.railway.app"
-];
-
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
-
-app.options("*", cors());
-
+app.use(
+  cors({
+    origin: [
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'https://mern-hackathone.vercel.app',
+      'https://mern-hackathone-production.up.railway.app/api'
+    ],
+    methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 
 
 app.use(express.json());
